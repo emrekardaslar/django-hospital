@@ -2,65 +2,70 @@
 
 from rest_framework import generics
 from .models import Doctor, OtherEmployee, Patient, Appointment, Room, Bed
+from .permissions import IsAdminForNonGet
 from .serializers import DoctorSerializer, OtherEmployeeSerializer, PatientSerializer, AppointmentSerializer, \
     RoomSerializer, BedSerializer
 
 
-class DoctorList(generics.ListCreateAPIView):
+class BaseAdminForNonGetView(generics.GenericAPIView):
+    permission_classes = [IsAdminForNonGet]
+
+
+class DoctorList(BaseAdminForNonGetView, generics.ListCreateAPIView):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
 
 
-class DoctorDetail(generics.RetrieveUpdateDestroyAPIView):
+class DoctorDetail(BaseAdminForNonGetView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
 
 
-class OtherEmployeeList(generics.ListCreateAPIView):
+class OtherEmployeeList(BaseAdminForNonGetView, generics.ListCreateAPIView):
     queryset = OtherEmployee.objects.all()
     serializer_class = OtherEmployeeSerializer
 
 
-class OtherEmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
+class OtherEmployeeDetail(BaseAdminForNonGetView, generics.RetrieveUpdateDestroyAPIView):
     queryset = OtherEmployee.objects.all()
     serializer_class = OtherEmployeeSerializer
 
 
-class PatientList(generics.ListCreateAPIView):
+class PatientList(BaseAdminForNonGetView, generics.ListCreateAPIView):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
 
 
-class PatientDetail(generics.RetrieveUpdateDestroyAPIView):
+class PatientDetail(BaseAdminForNonGetView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
 
 
-class AppointmentList(generics.ListCreateAPIView):
+class AppointmentList(BaseAdminForNonGetView, generics.ListCreateAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
 
 
-class AppointmentDetail(generics.RetrieveUpdateDestroyAPIView):
+class AppointmentDetail(BaseAdminForNonGetView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
 
 
-class RoomList(generics.ListCreateAPIView):
+class RoomList(BaseAdminForNonGetView, generics.ListCreateAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
 
-class RoomDetail(generics.RetrieveUpdateDestroyAPIView):
+class RoomDetail(BaseAdminForNonGetView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
 
-class BedList(generics.ListCreateAPIView):
+class BedList(BaseAdminForNonGetView, generics.ListCreateAPIView):
     queryset = Bed.objects.all()
     serializer_class = BedSerializer
 
 
-class BedDetail(generics.RetrieveUpdateDestroyAPIView):
+class BedDetail(BaseAdminForNonGetView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Bed.objects.all()
     serializer_class = BedSerializer
