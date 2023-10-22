@@ -15,13 +15,32 @@ class Employee(models.Model):
 
 # Model for Doctors (Inherits from Employee)
 class Doctor(Employee):
-    specialty = models.CharField(max_length=100)
+    specialities = (
+        ('General Medicine', 'General Medicine'),
+        ('Family Medicine', 'Family Medicine'),
+        ('Internal Medicine', 'Internal Medicine'),
+        ('Pediatrics', 'Pediatrics'),
+        ('Cardiology', 'Cardiology'),
+        ('Gastroenterology', 'Gastroenterology'),
+        ('Neurology', 'Neurology'),
+        ('Orthopedics', 'Orthopedics'),
+    )
+    specialty = models.CharField(max_length=100, choices=specialities)
     # Additional fields specific to doctors
 
 
 # Model for Other Employees (Inherits from Employee)
 class OtherEmployee(Employee):
-    department = models.CharField(max_length=100)
+    DEPARTMENT_CHOICES = (
+        ('Administration', 'Administration'),
+        ('Finance', 'Finance'),
+        ('Human Resources', 'Human Resources'),
+        ('Information Technology', 'Information Technology'),
+        ('Marketing', 'Marketing'),
+        ('Operations', 'Operations'),
+        ('Sales', 'Sales'),
+    )
+    department = models.CharField(max_length=100, choices=DEPARTMENT_CHOICES)
     # Additional fields specific to other employees, e.g., department, job title, etc.
 
 
@@ -51,7 +70,7 @@ class Appointment(models.Model):
 
 # Model for Rooms
 class Room(models.Model):
-    room_number = models.CharField(max_length=10)
+    room_number = models.IntegerField()
 
     # You can add more fields like room type, description, etc.
 
@@ -62,7 +81,7 @@ class Room(models.Model):
 # Model for Beds
 class Bed(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    bed_number = models.CharField(max_length=10)
+    bed_number = models.IntegerField()
     is_occupied = models.BooleanField(default=False)
 
     # You can add more fields like patient assigned, bed type, etc.
