@@ -5,12 +5,12 @@ from django.db import models
 
 # Model for Employees (Base class)
 class Employee(models.Model):
-    name = models.CharField(max_length=100)
-
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     # Common fields for all employees, e.g., contact information, hire date, etc.
 
     def __str__(self):
-        return self.name
+        return f"{self.first_name} {self.last_name}"
 
 
 # Model for Doctors (Inherits from Employee)
@@ -70,7 +70,7 @@ class Appointment(models.Model):
 
 # Model for Rooms
 class Room(models.Model):
-    room_number = models.IntegerField()
+    room_number = models.IntegerField(default=1, choices=((i,i) for i in range(1, 101)), unique=True)
 
     # You can add more fields like room type, description, etc.
 
@@ -81,13 +81,16 @@ class Room(models.Model):
 # Model for Beds
 class Bed(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    bed_number = models.IntegerField()
+    bed_number = models.IntegerField(default=1, choices=((i,i) for i in range(1, 6)))
     is_occupied = models.BooleanField(default=False)
 
     # You can add more fields like patient assigned, bed type, etc.
 
     def __str__(self):
         return f"Bed {self.bed_number} in Room {self.room.room_number}"
+
+    class Meta:
+        unique_together = ('bed_number', 'room')
 
 
 # Model for Treatments

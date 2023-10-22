@@ -7,13 +7,13 @@ from .models import Doctor, OtherEmployee, Patient, Appointment, Room, Bed, Trea
 # Admin class for Doctor
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ['name', 'specialty']
+    list_display = ['first_name', 'last_name', 'specialty']
 
 
 # Admin class for Other Employee
 @admin.register(OtherEmployee)
 class OtherEmployeeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'department']
+    list_display = ['first_name', 'last_name', 'department']
 
 
 # Admin class for Patient
