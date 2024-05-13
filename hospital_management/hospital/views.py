@@ -6,6 +6,7 @@ from .permissions import IsAdminForNonGet
 from .serializers import DoctorSerializer, OtherEmployeeSerializer, PatientSerializer, AppointmentSerializer, \
     RoomSerializer, BedSerializer
 
+from django.shortcuts import render
 
 class BaseAdminForNonGetView(generics.GenericAPIView):
     permission_classes = [IsAdminForNonGet]
@@ -69,3 +70,7 @@ class BedList(BaseAdminForNonGetView, generics.ListCreateAPIView):
 class BedDetail(BaseAdminForNonGetView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Bed.objects.all()
     serializer_class = BedSerializer
+
+
+def websocket_demo(request):
+    return render(request, 'websocket_demo.html')

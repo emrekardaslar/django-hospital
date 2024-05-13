@@ -3,6 +3,7 @@
 from django.urls import path
 from .views import DoctorList, DoctorDetail, OtherEmployeeList, OtherEmployeeDetail, PatientList, PatientDetail, \
     AppointmentList, AppointmentDetail, RoomList, RoomDetail, BedList, BedDetail
+from . import views
 
 urlpatterns = [
     path('doctors/', DoctorList.as_view(), name='doctor-list'),
@@ -17,4 +18,5 @@ urlpatterns = [
     path('rooms/<int:pk>/', RoomDetail.as_view(), name='room-detail'),
     path('beds/', BedList.as_view(), name='bed-list'),
     path('beds/<int:pk>/', BedDetail.as_view(), name='bed-detail'),
+    path('websocket-demo/', views.websocket_demo, name='websocket_demo'),
 ]
