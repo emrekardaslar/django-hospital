@@ -31,31 +31,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function displayDoctorsAndAppointments(data) {
-    const messageContainer = document.getElementById("message-container");
-    const doctors = data.doctors;
-    let appointments = data.appointments;
+function displayDoctorsAndAppointments(data) {
+  const messageContainer = document.getElementById("message-container");
+  const doctors = data.doctors;
+  const appointments = data.appointments;
 
-    // Clear the message container before displaying data
-    messageContainer.innerHTML = "";
+  // Clear the message container before displaying data
+  messageContainer.innerHTML = "";
 
-    // Display doctors
-    messageContainer.innerHTML += "<h2>Doctors:</h2>";
-    doctors.forEach(function (doctor) {
-      messageContainer.innerHTML += `<p>${doctor.first_name} ${doctor.last_name} - ${doctor.specialty}</p>`;
-    });
+  // Create a map to store doctor ids and a boolean indicating if they have appointments
+  const doctorAppointmentsMap = new Map();
+  appointments.forEach((appointment) => {
+    const doctorId = appointment.doctor.id;
+    if (!doctorAppointmentsMap.has(doctorId)) {
+      doctorAppointmentsMap.set(doctorId, true); // Initialize with true if there is at least one appointment
+    }
+  });
 
-    // Sort appointments by appointment_date
-    appointments.sort(
-      (a, b) => new Date(a.appointment_date) - new Date(b.appointment_date)
-    );
+  // Display doctors
+  messageContainer.innerHTML += "<h2>Doctors:</h2>";
+  doctors.forEach((doctor) => {
+    const hasAppointments = doctorAppointmentsMap.has(doctor.id);
+    messageContainer.innerHTML += `<p>${doctor.first_name} ${doctor.last_name} - ${doctor.specialty} ${hasAppointments ? '(Has Appointments)' : '(No Appointments)'}</p>`;
+  });
 
-    // Display appointments
-    messageContainer.innerHTML += "<h2>Appointments:</h2>";
-    appointments.forEach(function (appointment) {
-      messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor.first_name} for Patient No: ${appointment.patient.first_name} on ${appointment.appointment_date}</p>`;
-    });
-  }
+  // Sort appointments by appointment_date
+  appointments.sort(
+    (a, b) => new Date(a.appointment_date) - new Date(b.appointment_date)
+  );
+
+  // Display appointments
+  messageContainer.innerHTML += "<h2>Appointments:</h2>";
+  appointments.forEach((appointment) => {
+    messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor.first_name} for Patient No: ${appointment.patient.first_name} on ${appointment.appointment_date}</p>`;
+  });
+}
+
 
   function updateOrCreateAppointment(appointment) {
     const appointmentElement = document.getElementById(
