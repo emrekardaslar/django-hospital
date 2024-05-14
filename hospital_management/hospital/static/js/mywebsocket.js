@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Display appointments
     messageContainer.innerHTML += "<h2>Appointments:</h2>";
     appointments.forEach(function (appointment) {
-      messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor} for Patient No: ${appointment.patient} on ${appointment.appointment_date}</p>`;
+      messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor.first_name} for Patient No: ${appointment.patient.first_name} on ${appointment.appointment_date}</p>`;
     });
   }
 
@@ -63,18 +63,18 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     if (appointmentElement) {
       // Update existing appointment
-      appointmentElement.innerHTML = `Appointment with Dr. ${appointment.doctor} for Patient No: ${appointment.patient} on ${appointment.appointment_date}`;
+      appointmentElement.innerHTML = `Appointment with Dr. ${appointment.doctor.first_name} for Patient No: ${appointment.patient.first_name} on ${appointment.appointment_date}`;
     } else {
       // Create new appointment
       const messageContainer = document.getElementById("message-container");
-      messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor} for Patient No: ${appointment.patient} on ${appointment.appointment_date}</p>`;
+      messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor.first_name} for Patient No: ${appointment.patient.first_name} on ${appointment.appointment_date}</p>`;
     }
 
     // Sort appointments after updating or creating
     sortAppointments();
 
     // TODO Redisplay doctors
-    //displayDoctorsAndAppointments({ doctors: appointment.doctors });
+    //displayDoctorsAndAppointments({ doctors: appointment.doctor.first_names });
   }
 
   function deleteAppointment(appointmentId) {
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sortAppointments();
 
     // Redisplay doctors
-    displayDoctorsAndAppointments({ doctors: appointment.doctors });
+    displayDoctorsAndAppointments({ doctors: appointment.doctor.first_names });
   }
 
   function sortAppointments() {
