@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const data = JSON.parse(event.data);
         console.log(data);
         if (data.type === 'appointment_update') {
-            updateAppointment(data.data);
+            updateOrCreateAppointment(data.data);
+        } else if (data.type === 'appointment_delete') {
+            deleteAppointment(data.data.id);
         } else {
             displayDoctorsAndAppointments(data);
         }
@@ -30,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function displayDoctorsAndAppointments(data) {
         const messageContainer = document.getElementById('message-container');
         const doctors = data.doctors;
-        const appointments = data.appointments;
+        let appointments = data.appointments;
 
         // Clear the message container before displaying data
         messageContainer.innerHTML = '';
@@ -40,22 +42,33 @@ document.addEventListener('DOMContentLoaded', function () {
         doctors.forEach(function(doctor) {
             messageContainer.innerHTML += `<p>${doctor.first_name} ${doctor.last_name} - ${doctor.specialty}</p>`;
         });
+
         // Sort appointments by appointment_date
         appointments.sort((a, b) => new Date(a.appointment_date) - new Date(b.appointment_date));
+
         // Display appointments
         messageContainer.innerHTML += "<h2>Appointments:</h2>";
         appointments.forEach(function(appointment) {
-            messageContainer.innerHTML += `<p>Appointment with Dr. ${appointment.doctor} for Patient No: ${appointment.patient} on ${appointment.appointment_date}</p>`;
+            messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor} for Patient No: ${appointment.patient} on ${appointment.appointment_date}</p>`;
         });
     }
 
-    function updateAppointment(appointment) {
-        const messageContainer = document.getElementById('message-container');
-        const existingAppointment = messageContainer.querySelector(`#appointment-${appointment.id}`);
-        if (existingAppointment) {
-            existingAppointment.innerHTML = `<p>Appointment with Dr. ${appointment.doctor} for Patient No: ${appointment.patient} on ${appointment.appointment_date}</p>`;
+    function updateOrCreateAppointment(appointment) {
+        const appointmentElement = document.getElementById(`appointment-${appointment.id}`);
+        if (appointmentElement) {
+            // Update existing appointment
+            appointmentElement.innerHTML = `Appointment with Dr. ${appointment.doctor} for Patient No: ${appointment.patient} on ${appointment.appointment_date}`;
         } else {
+            // Create new appointment
+            const messageContainer = document.getElementById('message-container');
             messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor} for Patient No: ${appointment.patient} on ${appointment.appointment_date}</p>`;
+        }
+    }
+
+    function deleteAppointment(appointmentId) {
+        const appointmentElement = document.getElementById(`appointment-${appointmentId}`);
+        if (appointmentElement) {
+            appointmentElement.remove();
         }
     }
 });

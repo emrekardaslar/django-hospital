@@ -8,11 +8,11 @@ from channels.layers import get_channel_layer
 from .models import Doctor, Appointment
 from .serializers import DoctorSerializer, AppointmentSerializer
 from django.dispatch import receiver
-from django.db.models.signals import post_save
-
+from django.db.models.signals import post_save, post_delete
 
 # List to keep track of connected clients
 connected_clients = set()
+
 
 class DemoConsumer(WebsocketConsumer):
     def connect(self):
@@ -65,12 +65,22 @@ class DemoConsumer(WebsocketConsumer):
 
 
 @receiver(post_save, sender=Appointment)
-def appointment_update_handler(sender, instance, created, **kwargs):
-    if not created:
-        data = {
-            'type': 'appointment_update',
-            'data': AppointmentSerializer(instance).data
-        }
-        # Send update to all connected clients
-        for client in connected_clients:
-            client.send(text_data=json.dumps(data))
+def appointment_update_handler(sender, instance, **kwargs):
+    data = {
+        'type': 'appointment_update',
+        'data': AppointmentSerializer(instance).data
+    }
+    # Send update to all connected clients
+    for client in connected_clients:
+        client.send(text_data=json.dumps(data))
+
+
+@receiver(post_delete, sender=Appointment)
+def appointment_delete_handler(sender, instance, **kwargs):
+    data = {
+        'type': 'appointment_delete',
+        'data': AppointmentSerializer(instance).data
+    }
+    # Send update to all connected clients
+    for client in connected_clients:
+        client.send(text_data=json.dumps(data))
