@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (data.type === "appointment_update") {
       updateOrCreateAppointment(data.data);
     } else if (data.type === "appointment_delete") {
-      deleteAppointment(data.data.id);
+      deleteAppointment(data.data.id, data.data);
     } else {
       displayDoctorsAndAppointments(data);
     }
@@ -31,64 +31,51 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-function displayDoctorsAndAppointments(data) {
-  const messageContainer = document.getElementById("message-container");
-  const doctors = data.doctors;
-  const appointments = data.appointments;
+  function displayDoctorsAndAppointments(data) {
+    const messageContainer = document.getElementById("message-container");
+    const doctors = data.doctors;
+    const appointments = data.appointments;
 
-  // Clear the message container before displaying data
-  messageContainer.innerHTML = "";
+    // Clear the message container before displaying data
+    messageContainer.innerHTML = "";
 
-  // Create a map to store doctor ids and a boolean indicating if they have appointments
-  const doctorAppointmentsMap = new Map();
-  appointments.forEach((appointment) => {
-    const doctorId = appointment.doctor.id;
-    if (!doctorAppointmentsMap.has(doctorId)) {
-      doctorAppointmentsMap.set(doctorId, true); // Initialize with true if there is at least one appointment
-    }
-  });
+    // Create a map to store doctor ids and a boolean indicating if they have appointments
+    const doctorAppointmentsMap = new Map();
+    appointments.forEach((appointment) => {
+      const doctorId = appointment.doctor.id;
+      if (!doctorAppointmentsMap.has(doctorId)) {
+        doctorAppointmentsMap.set(doctorId, true); // Initialize with true if there is at least one appointment
+      }
+    });
 
-  // Display doctors
-  messageContainer.innerHTML += "<h2>Doctors:</h2>";
-  doctors.forEach((doctor) => {
-    const hasAppointments = doctorAppointmentsMap.has(doctor.id);
-    messageContainer.innerHTML += `<p>${doctor.first_name} ${doctor.last_name} - ${doctor.specialty} ${hasAppointments ? '(Has Appointments)' : '(No Appointments)'}</p>`;
-  });
+    // Display doctors
+    messageContainer.innerHTML += "<h2>Doctors:</h2>";
+    doctors.forEach((doctor) => {
+      const hasAppointments = doctorAppointmentsMap.has(doctor.id);
+      messageContainer.innerHTML += `<p>${doctor.first_name} ${
+        doctor.last_name
+      } - ${doctor.specialty} ${
+        hasAppointments ? "(Has Appointments)" : "(No Appointments)"
+      }</p>`;
+    });
 
-  // Sort appointments by appointment_date
-  appointments.sort(
-    (a, b) => new Date(a.appointment_date) - new Date(b.appointment_date)
-  );
-
-  // Display appointments
-  messageContainer.innerHTML += "<h2>Appointments:</h2>";
-  appointments.forEach((appointment) => {
-    messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor.first_name} for Patient No: ${appointment.patient.first_name} on ${appointment.appointment_date}</p>`;
-  });
-}
-
-
-  function updateOrCreateAppointment(appointment) {
-    const appointmentElement = document.getElementById(
-      `appointment-${appointment.id}`
+    // Sort appointments by appointment_date
+    appointments.sort(
+      (a, b) => new Date(a.appointment_date) - new Date(b.appointment_date)
     );
-    if (appointmentElement) {
-      // Update existing appointment
-      appointmentElement.innerHTML = `Appointment with Dr. ${appointment.doctor.first_name} for Patient No: ${appointment.patient.first_name} on ${appointment.appointment_date}`;
-    } else {
-      // Create new appointment
-      const messageContainer = document.getElementById("message-container");
+
+    // Display appointments
+    messageContainer.innerHTML += "<h2>Appointments:</h2>";
+    appointments.forEach((appointment) => {
       messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor.first_name} for Patient No: ${appointment.patient.first_name} on ${appointment.appointment_date}</p>`;
-    }
-
-    // Sort appointments after updating or creating
-    sortAppointments();
-
-    // TODO Redisplay doctors
-    //displayDoctorsAndAppointments({ doctors: appointment.doctor.first_names });
+    });
   }
 
-  function deleteAppointment(appointmentId) {
+  function updateOrCreateAppointment(appointment) {
+    displayDoctorsAndAppointments(appointment);
+  }
+
+  function deleteAppointment(appointmentId, data) {
     const appointmentElement = document.getElementById(
       `appointment-${appointmentId}`
     );
@@ -100,7 +87,7 @@ function displayDoctorsAndAppointments(data) {
     sortAppointments();
 
     // Redisplay doctors
-    displayDoctorsAndAppointments({ doctors: appointment.doctor.first_names });
+    displayDoctorsAndAppointments(data);
   }
 
   function sortAppointments() {

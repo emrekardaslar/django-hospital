@@ -66,9 +66,20 @@ class DemoConsumer(WebsocketConsumer):
 
 @receiver(post_save, sender=Appointment)
 def appointment_update_handler(sender, instance, **kwargs):
+    # Fetch doctors
+    doctors = Doctor.objects.all()
+    serialized_doctors = DoctorSerializer(doctors, many=True).data
+
+    # Fetch all appointments
+    appointments = Appointment.objects.all()
+    serialized_appointments = AppointmentSerializer(appointments, many=True).data
+
     data = {
         'type': 'appointment_update',
-        'data': AppointmentSerializer(instance).data
+        'data': {
+            'doctors': serialized_doctors,
+            'appointments': serialized_appointments
+        }
     }
     # Send update to all connected clients
     for client in connected_clients:
@@ -77,9 +88,20 @@ def appointment_update_handler(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Appointment)
 def appointment_delete_handler(sender, instance, **kwargs):
+    # Fetch doctors
+    doctors = Doctor.objects.all()
+    serialized_doctors = DoctorSerializer(doctors, many=True).data
+
+    # Fetch all appointments
+    appointments = Appointment.objects.all()
+    serialized_appointments = AppointmentSerializer(appointments, many=True).data
+
     data = {
         'type': 'appointment_delete',
-        'data': AppointmentSerializer(instance).data
+        'data': {
+            'doctors': serialized_doctors,
+            'appointments': serialized_appointments
+        }
     }
     # Send update to all connected clients
     for client in connected_clients:
