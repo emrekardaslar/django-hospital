@@ -1,0 +1,20 @@
+<!-- myapp/templates/websocket_demo.html -->
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Demo</title>
+</head>
+<body>
+    <h1>WebSocket Demo</h1>
+    <div id="message-container"></div>
+<!--    <input type="text" id="message-input" placeholder="Type a message...">-->
+<!--    <button onclick="sendMessage()">Send</button>-->
+
+    <!-- Include WebSocket JavaScript -->
+    <script src="{% static 'js/mywebsocket.js' %}"></script>
+</body>
+</html>
