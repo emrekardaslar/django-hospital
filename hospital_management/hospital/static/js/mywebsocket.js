@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Display appointments
     messageContainer.innerHTML += "<h2>Appointments:</h2>";
     appointments.forEach((appointment) => {
-      messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor.first_name} for Patient No: ${appointment.patient.first_name} on ${appointment.appointment_date}</p>`;
+      messageContainer.innerHTML += `<p id="appointment-${appointment.id}">Appointment with Dr. ${appointment.doctor.first_name} for Patient: ${appointment.patient.first_name} on ${appointment.appointment_date}</p>`;
     });
   }
 

@@ -8,6 +8,7 @@ from .serializers import DoctorSerializer, OtherEmployeeSerializer, PatientSeria
 
 from django.shortcuts import render
 
+
 class BaseAdminForNonGetView(generics.GenericAPIView):
     permission_classes = [IsAdminForNonGet]
 
@@ -72,5 +73,5 @@ class BedDetail(BaseAdminForNonGetView, generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BedSerializer
 
 
-def websocket_demo(request):
-    return render(request, 'websocket_demo.html')
+def appointments(request):
+    return render(request, 'appointments.html')

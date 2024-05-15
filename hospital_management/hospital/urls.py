@@ -18,5 +18,5 @@ urlpatterns = [
     path('rooms/<int:pk>/', RoomDetail.as_view(), name='room-detail'),
     path('beds/', BedList.as_view(), name='bed-list'),
     path('beds/<int:pk>/', BedDetail.as_view(), name='bed-detail'),
-    path('websocket-demo/', views.websocket_demo, name='websocket_demo'),
+    path('live/', views.appointments, name='live'),
 ]
